@@ -11,9 +11,23 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        if #available(iOS 13.0, *) {
+            // In iOS 13 setup is done in SceneDelegate
+        } else {
+            let window = UIWindow(frame: UIScreen.main.bounds)
+            self.window = window
+            
+            //            if (user != nil && userSelfIdent != nil){
+            let vc = MovieCategoryListViewController.init(nibName: String(describing: MovieSearchableListViewController.self), bundle: nil)
+            let navController = UINavigationController.init(rootViewController: vc)
+//            navController.navigationBar.isHidden = true
+            self.window?.rootViewController = navController
+            //            }
+        }
         return true
     }
 

@@ -24,6 +24,14 @@ class MovieListViewModel: MovieSearchableListViewModel {
         self.reloadTableCompletion?(true)
     }
     
+    override func showMovieList() -> Bool {
+        return true
+    }
+    
+    override func getNumberOfRows() -> Int {
+        return movies.count
+    }
+    
     /// Get movie list based on category value
     /// - Parameters:
     ///   - filterCategory: <#filterCategory description#>

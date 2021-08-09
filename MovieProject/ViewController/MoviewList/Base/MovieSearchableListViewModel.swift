@@ -82,6 +82,8 @@ class MovieSearchableListViewModel: BaseViewModel, MovieSearchableListViewModelP
     /// Call this function after movie selection
     /// - Parameter indexPath: <#indexPath description#>
     func tableViewDidTap(at indexPath: IndexPath) {
+        let selectedMovie = self.movies[indexPath.row]
+        self.movieClickedCompletion?(selectedMovie)
 //        if searchMode == .off {
 //            let categoryName: String = self.getCellModel(for: indexPath).lowercased()
 //            if let category = MovieFilterCategory(rawValue: categoryName) {

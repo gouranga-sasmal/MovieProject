@@ -19,6 +19,7 @@ class MovieSearchableListViewController: BaseViewController {
 
         // Do any additional setup after loading the view.
         setupViewModel()
+        setupUI()
     }
 
 

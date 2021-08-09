@@ -9,7 +9,7 @@ import Foundation
 
 class MovieCategoryValuesViewModel: MovieSearchableListViewModel {
     
-    public var categoryValueClickedCompletion:((MovieFilterCategory, String)->Void)? = nil // push to movie details
+    public var categoryValueClickedCompletion:((MovieFilterCategory, String, [VideoModel])->Void)? = nil // push to movie details
     
     private let category: MovieFilterCategory
     
@@ -33,8 +33,8 @@ class MovieCategoryValuesViewModel: MovieSearchableListViewModel {
     }
     
     override func tableViewDidTap(at indexPath: IndexPath) {
-        let selectedValue: String = self.getCellModel(for: indexPath).lowercased()
-        self.categoryValueClickedCompletion?(self.category, selectedValue)
+        let selectedValue: String = self.getCellModel(for: indexPath)
+        self.categoryValueClickedCompletion?(self.category, selectedValue, allMovies)
     }
     
 

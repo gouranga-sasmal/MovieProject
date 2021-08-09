@@ -37,5 +37,16 @@ class BaseViewController: UIViewController {
         let vc = storyBoard.instantiateViewController(withIdentifier: String(describing: T.self))
         return vc as? T
     }
+    
+    /// Get the ViewController from storyboard
+    /// - Parameter storyboard: Storyboard name
+    /// - Returns: ViewController
+    ///
+    ///       // Call this function like below
+    ///       let vc: AMLoginViewController? = self.getViewController(from: StoryBoard.main)
+    func getViewController<T: UIViewController, U: UIViewController>(subClassOf vc: U.Type) -> T {
+        let vc = T.init(nibName: String(describing: U.self), bundle: nil)
+        return vc
+    }
 
 }

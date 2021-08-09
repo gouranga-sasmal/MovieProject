@@ -19,8 +19,11 @@ class MovieCategoryValuesViewController: MovieSearchableListViewController {
     
     override func setupViewModel() {
 //        guard let model = viewModel else { return }
-        viewModel?.categoryValueClickedCompletion = { (category, selectedValue) in
-            
+        viewModel?.categoryValueClickedCompletion = { (category, selectedValue, movies) in
+            let vc: MovieListViewController = self.getViewController(subClassOf: MovieSearchableListViewController.self)
+            let vModel = MovieListViewModel(category: category, value: selectedValue, and: movies)
+            vc.viewModel = vModel
+            self.navigationController?.pushViewController(vc, animated: true)
         }
         self.baseViewModel = viewModel
         super.setupViewModel()

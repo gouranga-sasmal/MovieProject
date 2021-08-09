@@ -7,31 +7,44 @@
 
 import Foundation
 
-fileprivate enum TableViewUIState {
-    case showAllFilters // show only the filters i.e year, genre, directors, actors
-    case specificTo(filterCategory: MovieFilterCategory) // show list specific to category
-    case movieList(filterCategory: MovieFilterCategory, selectedValue: String) // show list specific to category and selected value
-    case search(string: String)
-}
-
-fileprivate enum SearchableCategory {
-    case title
-    case actor
-    case genre
-    case director
-}
-
-fileprivate enum MovieFilterCategory: String, CaseIterable {
-    case year
-    case genre
-    case directors
-    case actors
-}
-
-
-class MovieListViewModel: BaseViewModel {
+class MovieListViewModel: MovieSearchableListViewModel {
     
-    public var reloadTableCompletion:((Bool)->Void)? = nil // to reload the tableview
+    private let category: MovieFilterCategory
+    private let selectedValue: String
+    
+    init(category: MovieFilterCategory, value: String, and movies: [VideoModel]) {
+        self.category = category
+        self.selectedValue = value
+        super.init()
+        self.allMovies = movies
+    }
+    
+    override func initiate() {
+        self.movies = filterdMovieList(using: category, from: self.allMovies, withSearchable: selectedValue)
+        self.reloadTableCompletion?(true)
+    }
+    
+    /// Get movie list based on category value
+    /// - Parameters:
+    ///   - filterCategory: <#filterCategory description#>
+    ///   - movieList: <#movieList description#>
+    ///   - value: <#value description#>
+    /// - Returns: <#description#>
+    private func filterdMovieList(using filterCategory: MovieFilterCategory, from movieList: [VideoModel], withSearchable value: String) -> [VideoModel] {
+        
+        let withCriteria: (VideoModel) -> Bool = { video in
+            let vals = self.getValue(of: filterCategory, from: video)
+            return vals.contains(value)
+        }
+        
+        return movieList.filter(withCriteria)
+    }
+}
+
+/*
+class MovieListViewModel: MovieSearchableListViewModel {
+    
+//    public var reloadTableCompletion:((Bool)->Void)? = nil // to reload the tableview
     public var movieClickedCompletion:((VideoModel)->Void)? = nil // push to movie details
     
     private var movieListFetcher: MovieListFetchable? = nil // get movie list
@@ -236,3 +249,4 @@ extension MovieListViewModel {
         return false
     }
 }
+*/

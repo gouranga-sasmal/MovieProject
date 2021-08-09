@@ -1,27 +1,26 @@
 //
-//  MovieListViewController.swift
+//  MovieSearchableListViewController.swift
 //  MovieProject
 //
-//  Created by Gouranga Sasmal on 06/08/21.
+//  Created by Gouranga Sasmal on 09/08/21.
 //
 
 import UIKit
 
-class MovieListViewController: BaseViewController {
+class MovieSearchableListViewController: BaseViewController {
     
     @IBOutlet var tableview: UITableView!
     @IBOutlet var searchBar: UISearchBar!
     
-    var viewModel = MovieListViewModel()
+    var baseViewModel: MovieSearchableListViewModelProtocol?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.setup(self.viewModel)
-        setupUI()
+        setupViewModel()
     }
-    
+
 
     /*
     // MARK: - Navigation
@@ -33,18 +32,16 @@ class MovieListViewController: BaseViewController {
     }
     */
     
-    /// Setup viewModel
-    /// - Parameter model: <#model description#>
-    private func setup(_ model: MovieListViewModel) {
+    func setupViewModel() {
         
-        model.reloadTableCompletion = { shouldReload in
+        self.baseViewModel?.reloadTableCompletion = { shouldReload in
             DispatchQueue.main.async {
                 guard shouldReload else { return }
                 self.tableview.reloadData()
             }
         }
         
-        model.movieClickedCompletion = { movie in
+        self.baseViewModel?.movieClickedCompletion = { movie in
             DispatchQueue.main.async {
                 guard let vc: MovieDetailsViewController = self.getViewController(from: .main) else { return }
                 let detailsViewModel = MovieDetailsViewModel(movie: movie)
@@ -53,48 +50,52 @@ class MovieListViewController: BaseViewController {
             }
         }
         
-        model.initiate()
+        self.baseViewModel?.initiate()
     }
     
-    /// SetupUI
-    private func setupUI() {
-        
-        self.tableview.dataSource = self
-        self.tableview.delegate = self
-        self.tableview.tableFooterView = UIView(frame: .zero)
+    public func setupTableViewCell() {
         
         let nibName = String(describing: MovieTableViewCell.self)
         let identifier = nibName
         let nib = UINib(nibName: nibName, bundle: nil)
         self.tableview.register(nib, forCellReuseIdentifier: identifier)
+    }
+    
+    private func setupUI() {
+       
+        self.setupTableViewCell()
+        
+        self.tableview.dataSource = self
+        self.tableview.delegate = self
+        self.tableview.tableFooterView = UIView(frame: .zero)
         
         self.searchBar.delegate = self
         searchBar.searchTextField.delegate = self
+
+        self.setupTableViewCell()
+        
     }
 
 }
 
-extension MovieListViewController: UITableViewDataSource, UITableViewDelegate {
+
+extension MovieSearchableListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.getNumberOfRows()
+        return self.baseViewModel?.getNumberOfRows() ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if self.viewModel.showMovieList() {
-            let cell: MovieTableViewCell? = self.getTableViewCell(from: tableView)
-            cell?.populate(self.viewModel.getCellModel(for: indexPath))
-            return cell!
-        } else {
-            let cell: CellTitleTableViewCell? = self.getTableViewCell(from: tableView)
-            cell?.populate(self.viewModel.getCellModel(for: indexPath))
-            return cell!
+        guard let cell: MovieTableViewCell = self.getTableViewCell(from: tableView),
+              let model: VideoModel = self.baseViewModel?.getCellModel(for: indexPath) else {
+            fatalError("")
         }
-        
+        cell.populate(model)
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.viewModel.tableViewDidTap(at: indexPath)
+        self.baseViewModel?.tableViewDidTap(at: indexPath)
     }
     
     /// Get UITableViewCell from identifier
@@ -102,7 +103,7 @@ extension MovieListViewController: UITableViewDataSource, UITableViewDelegate {
     ///   - tableView: tableview
     ///   - identifier: identifier
     /// - Returns: <#description#>
-    private func getTableViewCell<T: UITableViewCell>(from tableView: UITableView, with identifier: String? = nil) -> T? {
+    final func getTableViewCell<T: UITableViewCell>(from tableView: UITableView, with identifier: String? = nil) -> T? {
         let value = identifier ?? String(describing: T.self)
         return tableview.dequeueReusableCell(withIdentifier: value) as? T
     }
@@ -110,17 +111,17 @@ extension MovieListViewController: UITableViewDataSource, UITableViewDelegate {
 
 //MARK: UISearchBarDelegate
 
-extension MovieListViewController: UISearchBarDelegate {
+extension MovieSearchableListViewController: UISearchBarDelegate {
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.setShowsCancelButton(true, animated: true)
-        self.viewModel.searchBarBeginEditing()
+        self.baseViewModel?.searchBarBeginEditing()
         return true
     }
     
     func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.setShowsCancelButton(false, animated: true)
-        self.viewModel.searchBarEndEditing()
+        self.baseViewModel?.searchBarEndEditing()
         return true
     }
     
@@ -132,7 +133,7 @@ extension MovieListViewController: UISearchBarDelegate {
         searchBar.setShowsCancelButton(false, animated: true)
         searchBar.searchTextField.resignFirstResponder()
         searchBar.text = nil
-        self.viewModel.searchBarEndEditing()
+        self.baseViewModel?.searchBarEndEditing()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -142,13 +143,13 @@ extension MovieListViewController: UISearchBarDelegate {
     
     @objc func searchFromMovies(text: String) {
         guard !text.isEmpty, text.count > 2 else { return }
-        self.viewModel.searchMovies(with: text)
+        self.baseViewModel?.searchMovies(with: text)
     }
 }
 
 //MARK: UITextFieldDelegate
 
-extension MovieListViewController: UITextFieldDelegate {
+extension MovieSearchableListViewController: UITextFieldDelegate {
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         self.perform(#selector(searchBarCancelButtonClicked(_:)), with: self.searchBar, afterDelay: 0.1)
         return true

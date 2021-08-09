@@ -14,9 +14,9 @@
 		CE114D4826BD84C500CD7463 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE114D4726BD84C500CD7463 /* DataManager.swift */; };
 		CE114D4D26BD850200CD7463 /* VideoListFetchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE114D4C26BD850200CD7463 /* VideoListFetchable.swift */; };
 		CE114D5126BD851D00CD7463 /* MovieListFetchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE114D5026BD851D00CD7463 /* MovieListFetchable.swift */; };
-		CE114D5426BD942600CD7463 /* CellTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE114D5326BD942600CD7463 /* CellTitleTableViewCell.swift */; };
 		CE114D5826BD943800CD7463 /* MovieTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE114D5626BD943800CD7463 /* MovieTableViewCell.swift */; };
 		CE114D5926BD943800CD7463 /* MovieTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE114D5726BD943800CD7463 /* MovieTableViewCell.xib */; };
+		CE58FBFA26C18DA3004E72FC /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58FBF926C18DA3004E72FC /* RatingView.swift */; };
 		CE73564526C0F5ED00AEFF0D /* MovieCategoryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE73564426C0F5ED00AEFF0D /* MovieCategoryListViewController.swift */; };
 		CE73564826C0F5FE00AEFF0D /* MovieCategoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE73564726C0F5FE00AEFF0D /* MovieCategoryListViewModel.swift */; };
 		CE73564B26C0F69000AEFF0D /* MovieCategoryValuesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE73564A26C0F69000AEFF0D /* MovieCategoryValuesViewController.swift */; };
@@ -54,9 +54,9 @@
 		CE114D4726BD84C500CD7463 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		CE114D4C26BD850200CD7463 /* VideoListFetchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListFetchable.swift; sourceTree = "<group>"; };
 		CE114D5026BD851D00CD7463 /* MovieListFetchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListFetchable.swift; sourceTree = "<group>"; };
-		CE114D5326BD942600CD7463 /* CellTitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellTitleTableViewCell.swift; sourceTree = "<group>"; };
 		CE114D5626BD943800CD7463 /* MovieTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTableViewCell.swift; sourceTree = "<group>"; };
 		CE114D5726BD943800CD7463 /* MovieTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MovieTableViewCell.xib; sourceTree = "<group>"; };
+		CE58FBF926C18DA3004E72FC /* RatingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		CE73564426C0F5ED00AEFF0D /* MovieCategoryListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCategoryListViewController.swift; sourceTree = "<group>"; };
 		CE73564726C0F5FE00AEFF0D /* MovieCategoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCategoryListViewModel.swift; sourceTree = "<group>"; };
 		CE73564A26C0F69000AEFF0D /* MovieCategoryValuesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCategoryValuesViewController.swift; sourceTree = "<group>"; };
@@ -120,7 +120,6 @@
 		CE114D4526BD822D00CD7463 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				CE114D5326BD942600CD7463 /* CellTitleTableViewCell.swift */,
 				CE9D24BF26C0ECC700E88586 /* MovieCategoryTitleTableViewCell.swift */,
 				CE9D24C026C0ECC700E88586 /* MovieCategoryTitleTableViewCell.xib */,
 				CE114D5626BD943800CD7463 /* MovieTableViewCell.swift */,
@@ -144,6 +143,14 @@
 				CE114D5026BD851D00CD7463 /* MovieListFetchable.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		CE58FBF826C18DA3004E72FC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CE58FBF926C18DA3004E72FC /* RatingView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		CE9D24BC26C0EC6E00E88586 /* MovieCategory */ = {
@@ -207,6 +214,7 @@
 				CEA224F426BD736600687402 /* AppDelegate.swift */,
 				CEA224F626BD736600687402 /* SceneDelegate.swift */,
 				CEA224F826BD736600687402 /* ViewController.swift */,
+				CE58FBF826C18DA3004E72FC /* Views */,
 				CEDB9A9826BEDAEC00DF57AF /* Utility */,
 				CEDB9A9026BEC63300DF57AF /* Extensions */,
 				CE114D4B26BD84F800CD7463 /* Protocols */,
@@ -278,11 +286,11 @@
 		CEA2252326BD810100687402 /* MoviewList */ = {
 			isa = PBXGroup;
 			children = (
-				CE9D24C426C0ED8500E88586 /* Base */,
 				CE114D4526BD822D00CD7463 /* Cell */,
-				CE9D24BE26C0EC8800E88586 /* MovieList */,
+				CE9D24C426C0ED8500E88586 /* Base */,
 				CE9D24BC26C0EC6E00E88586 /* MovieCategory */,
 				CE9D24BD26C0EC7700E88586 /* MovieCategoryValues */,
+				CE9D24BE26C0EC8800E88586 /* MovieList */,
 			);
 			path = MoviewList;
 			sourceTree = "<group>";
@@ -444,6 +452,7 @@
 				CE9D24C726C0EDCA00E88586 /* MovieSearchableListViewController.swift in Sources */,
 				CEDB9A9A26BEDAFA00DF57AF /* Constant.swift in Sources */,
 				CEA2252626BD812000687402 /* BaseViewController.swift in Sources */,
+				CE58FBFA26C18DA3004E72FC /* RatingView.swift in Sources */,
 				CE9D24CB26C0EEDB00E88586 /* MovieSearchableListViewModel.swift in Sources */,
 				CE114D4026BD818C00CD7463 /* MovieListViewModel.swift in Sources */,
 				CE114D4D26BD850200CD7463 /* VideoListFetchable.swift in Sources */,
@@ -451,7 +460,6 @@
 				CE114D4326BD819D00CD7463 /* MovieDetailsViewModel.swift in Sources */,
 				CEA2251C26BD80C900687402 /* MovieListViewController.swift in Sources */,
 				CEA2251726BD7F3900687402 /* VideoParser.swift in Sources */,
-				CE114D5426BD942600CD7463 /* CellTitleTableViewCell.swift in Sources */,
 				CE114D5126BD851D00CD7463 /* MovieListFetchable.swift in Sources */,
 				CE73564826C0F5FE00AEFF0D /* MovieCategoryListViewModel.swift in Sources */,
 				CE73564526C0F5ED00AEFF0D /* MovieCategoryListViewController.swift in Sources */,

@@ -38,12 +38,12 @@ class BaseViewController: UIViewController {
         return vc as? T
     }
     
-    /// Get the ViewController from storyboard
-    /// - Parameter storyboard: Storyboard name
+    /// Get the ViewController subclass of another viewcontroller whcih uses XIB
+    /// - Parameter vc: Parent ViewController type
     /// - Returns: ViewController
     ///
-    ///       // Call this function like below
-    ///       let vc: AMLoginViewController? = self.getViewController(from: StoryBoard.main)
+    ///       // Call this function like below. Where MovieListViewController is subclass of ListViewController
+    ///       let vc: MovieListViewController = self.getViewController(subClassOf: ListViewController.self)
     func getViewController<T: UIViewController, U: UIViewController>(subClassOf vc: U.Type) -> T {
         let vc = T.init(nibName: String(describing: U.self), bundle: nil)
         return vc

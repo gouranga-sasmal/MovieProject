@@ -16,17 +16,32 @@ protocol MovieSearchableListViewModelProtocol: class {
     var movieClickedCompletion:((VideoModel)->Void)? { get set} // push to movie details
     var searchMode: SearchMode { get }
 
+    // initiate the ViewModel
     func initiate()
+    
+    // get number of rows
     func getNumberOfRows() -> Int
+    
+    // get cell model of category/category result cell
     func getCellModel(for indexPath: IndexPath) -> String
+    
+    // get cell model for movie cell
     func getCellModel(for indexPath: IndexPath) -> VideoModel
+    
+    // tap on tableView cell
     func tableViewDidTap(at indexPath: IndexPath)
     
+    //search  begin edit
     func searchBarBeginEditing()
+    
+    // search bar end edit
     func searchBarEndEditing()
+    
+    // search movies with keyword
     func searchMovies(with keyword: String)
 }
 
+/// Movie search type
 enum SearchableCategory {
     case title
     case actor
@@ -34,6 +49,7 @@ enum SearchableCategory {
     case director
 }
 
+/// Movie filter type
 enum MovieFilterCategory: String, CaseIterable {
     case year
     case genre
@@ -45,6 +61,7 @@ enum MovieFilterCategory: String, CaseIterable {
 
 
 class MovieSearchableListViewModel: BaseViewModel, MovieSearchableListViewModelProtocol {
+    
     var searchMode: SearchMode = .off
     
     public var reloadTableCompletion:((Bool)->Void)? = nil // to reload the tableview
@@ -52,7 +69,7 @@ class MovieSearchableListViewModel: BaseViewModel, MovieSearchableListViewModelP
     
     public var allMovies: [VideoModel] = [] // all movies
     public var movies: [VideoModel] = [] // filterd movies
-    public var values: [String] = []
+    public var values: [String] = [] // contain category/category results
     
     
     func initiate() {
@@ -82,38 +99,10 @@ class MovieSearchableListViewModel: BaseViewModel, MovieSearchableListViewModelP
     /// Call this function after movie selection
     /// - Parameter indexPath: <#indexPath description#>
     func tableViewDidTap(at indexPath: IndexPath) {
-        let selectedMovie = self.movies[indexPath.row]
-        self.movieClickedCompletion?(selectedMovie)
-//        if searchMode == .off {
-//            let categoryName: String = self.getCellModel(for: indexPath).lowercased()
-//            if let category = MovieFilterCategory(rawValue: categoryName) {
-//
-//            }
-//        } else {
-//            // search mode on
-//            let selectedMovie = self.movies[indexPath.row]
-//            self.movieClickedCompletion?(selectedMovie)
-//        }
-//        switch tableState {
-//        case .showAllFilters:
-//            let categoryName: String = self.getCellModel(for: indexPath).lowercased()
-//            if let category = MovieFilterCategory(rawValue: categoryName) {
-//                self.tableState = TableViewUIState.specificTo(filterCategory: category)
-//                self.values = self.getAllValues(of: category, from: self.allMovies)
-//                self.values = Array(Set(self.values)).sorted()
-//                self.reloadTableCompletion?(true)
-//            }
-//        case .specificTo(let filterCategory):
-//            let value: String = self.getCellModel(for: indexPath)
-//            self.tableState = TableViewUIState.movieList(filterCategory: filterCategory, selectedValue: value)
-//            self.movies = filterdMovieList(using: filterCategory, from: self.allMovies, withSearchable: value)
-//            self.reloadTableCompletion?(true)
-//        case .movieList(_, _), .search(_):
-//            // push to movie details
-//            let selectedMovie = self.movies[indexPath.row]
-//            self.movieClickedCompletion?(selectedMovie)
-//            break
-//        }
+        if movies.count > indexPath.row {
+            let selectedMovie = self.movies[indexPath.row]
+            self.movieClickedCompletion?(selectedMovie)
+        }
     }
     
     /// Should show movie list or those category/their values
@@ -193,7 +182,6 @@ extension MovieSearchableListViewModel {
     private func shouldInclude(movie: VideoModel, with search: String) -> Bool {
         
         let isMatchedWith: (String?) -> Bool = { value in
-            print(value)
             return value?.lowercased().contains(search) ?? false
         }
         

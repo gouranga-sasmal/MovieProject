@@ -9,6 +9,7 @@ import Foundation
 
 class MovieCategoryValuesViewModel: MovieSearchableListViewModel {
     
+    // tableview clicked completion with category and selected category result and all Movie list
     public var categoryValueClickedCompletion:((MovieFilterCategory, String, [VideoModel])->Void)? = nil // push to movie details
     
     private let category: MovieFilterCategory
@@ -33,6 +34,10 @@ class MovieCategoryValuesViewModel: MovieSearchableListViewModel {
     }
     
     override func tableViewDidTap(at indexPath: IndexPath) {
+        guard searchMode == .off else {
+            super.tableViewDidTap(at: indexPath)
+            return
+        }
         let selectedValue: String = self.getCellModel(for: indexPath)
         self.categoryValueClickedCompletion?(self.category, selectedValue, allMovies)
     }

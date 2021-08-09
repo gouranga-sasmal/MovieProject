@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Fetch list of video
 protocol VideoListFetchable {
     func fetchVideoList(completion: @escaping (_ isSuccess: Bool,_ movies: [VideoModel]) -> Void)
 }

@@ -8,6 +8,8 @@
 import Foundation
 
 extension String {
+    /// Trim white space from string
+    /// - Returns: String
     func trim() -> String {
         return trimmingCharacters(in: .whitespacesAndNewlines)
     }

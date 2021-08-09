@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Parser
 protocol Parseable {
     func parse<T: Codable>(_ data: Data) -> T?
 }

@@ -12,20 +12,18 @@ class MovieCategoryValuesViewController: MovieSearchableListViewController {
     
     var viewModel: MovieCategoryValuesViewModel? = nil
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
-    
     override func setupViewModel() {
-//        guard let model = viewModel else { return }
+        
         viewModel?.categoryValueClickedCompletion = { (category, selectedValue, movies) in
+            // after clcked on tableview push to movie list controller
             let vc: MovieListViewController = self.getViewController(subClassOf: MovieSearchableListViewController.self)
             let vModel = MovieListViewModel(category: category, value: selectedValue, and: movies)
             vc.viewModel = vModel
             self.navigationController?.pushViewController(vc, animated: true)
         }
+        //assign viewModel
         self.baseViewModel = viewModel
+        //call super. NOTE: Befor call super assign viewMdoel to baseViewModel
         super.setupViewModel()
     }
     

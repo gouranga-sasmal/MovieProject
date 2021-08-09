@@ -8,6 +8,9 @@
 import Foundation
 
 class MovieDetailsViewModel: BaseViewModel {
+    
+    private let maxRatingValue: Double = 5.0
+    
     let movie: VideoModel
     
     init(movie: VideoModel) {
@@ -39,10 +42,22 @@ class MovieDetailsViewModel: BaseViewModel {
         return movie.genre
     }
     
-    func getRating() -> String? {
-        let rating = movie.ratings
-            .map { "\($0.source ?? ""): \($0.value ?? "")"}
-            .joined(separator: "\n")
-        return rating
+    func showRating() -> Bool {
+        return !movie.ratings.isEmpty
+    }
+    
+    /// Can show rating for the given index
+    /// - Parameter index: <#index description#>
+    /// - Returns: <#description#>
+    func canShowRating(at index: Int) -> (show: Bool, ratingString: String, rating: Double) {
+        // chcek the index
+        guard (movie.ratings.count - 1) >= index else {
+            // not valid index return false tuple
+            return (false, "", 0.0)
+        }
+        let ratingObject = movie.ratings[index]
+        let rater = "\(ratingObject.source ?? ""): \(ratingObject.value ?? "")"
+        let rating = ratingObject.convertedRating(basedOn: maxRatingValue) ?? 0
+        return (true, rater, rating )
     }
 }

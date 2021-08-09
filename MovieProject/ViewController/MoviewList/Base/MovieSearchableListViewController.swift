@@ -17,24 +17,15 @@ class MovieSearchableListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.navigationItem.title = "Movie"
         // Do any additional setup after loading the view.
         setupViewModel()
         setupUI()
     }
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     func setupViewModel() {
         
+        // set tableview reload
         self.baseViewModel?.reloadTableCompletion = { shouldReload in
             DispatchQueue.main.async {
                 guard shouldReload else { return }
@@ -42,6 +33,7 @@ class MovieSearchableListViewController: BaseViewController {
             }
         }
         
+        // after clicking on movie cell push to movie details cell
         self.baseViewModel?.movieClickedCompletion = { movie in
             DispatchQueue.main.async {
                 guard let vc: MovieDetailsViewController = self.getViewController(from: .main) else { return }
@@ -51,26 +43,30 @@ class MovieSearchableListViewController: BaseViewController {
             }
         }
         
+        // initiate
         self.baseViewModel?.initiate()
     }
     
     public func setupTableViewCell() {
-        
+        // register movie cell for search
         let nibName = String(describing: MovieTableViewCell.self)
         let identifier = nibName
         let nib = UINib(nibName: nibName, bundle: nil)
         self.tableview.register(nib, forCellReuseIdentifier: identifier)
     }
     
+    //MARK: Private methods
+    
     private func setupUI() {
-       
-        self.setupTableViewCell()
-        
+            
+        // setup tableview
         self.tableview.dataSource = self
         self.tableview.delegate = self
         self.tableview.tableFooterView = UIView(frame: .zero)
         
+        //setup searchBar
         self.searchBar.delegate = self
+        // set delegate in textField in order to get action when clear button pressed
         searchBar.searchTextField.delegate = self
 
         self.setupTableViewCell()
@@ -79,6 +75,7 @@ class MovieSearchableListViewController: BaseViewController {
 
 }
 
+//MARK: UITableViewDataSource, UITableViewDelegate
 
 extension MovieSearchableListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -87,6 +84,7 @@ extension MovieSearchableListViewController: UITableViewDataSource, UITableViewD
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        // return movie cell for search
         guard let cell: MovieTableViewCell = self.getTableViewCell(from: tableView),
               let model: VideoModel = self.baseViewModel?.getCellModel(for: indexPath) else {
             fatalError("")
@@ -115,18 +113,22 @@ extension MovieSearchableListViewController: UITableViewDataSource, UITableViewD
 extension MovieSearchableListViewController: UISearchBarDelegate {
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        // show cancel button
         searchBar.setShowsCancelButton(true, animated: true)
         self.baseViewModel?.searchBarBeginEditing()
         return true
     }
     
-    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        searchBar.setShowsCancelButton(false, animated: true)
-        self.baseViewModel?.searchBarEndEditing()
-        return true
-    }
+//    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+//        searchBar.setShowsCancelButton(false, animated: true)
+//        self.baseViewModel?.searchBarEndEditing()
+//        return true
+//    }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // hide cancel button
+        searchBar.setShowsCancelButton(false, animated: true)
+        self.baseViewModel?.searchBarEndEditing()
         searchBar.searchTextField.resignFirstResponder()
     }
     
@@ -138,11 +140,13 @@ extension MovieSearchableListViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // cancel previous request
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.searchFromMovies(text:)), object: nil)
         self.perform(#selector(self.searchFromMovies(text:)), with: searchText, afterDelay: 0.5)
     }
     
     @objc func searchFromMovies(text: String) {
+        // search iff text character count greater equal to 3
         guard !text.isEmpty, text.count > 2 else { return }
         self.baseViewModel?.searchMovies(with: text)
     }

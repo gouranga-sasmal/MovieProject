@@ -7,8 +7,11 @@
 
 import Foundation
 import UIKit
+import SDWebImage
 
 extension UIImageView {
+    /// Set URL in ImageView
+    /// - Parameter url: URL as string
     func setPoster(_ url: String?) {
         guard let urlStr = url,
               let tempURL = URL(string: urlStr) else { return }

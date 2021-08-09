@@ -62,6 +62,45 @@ struct Rating: Codable {
     }
 }
 
+extension Rating {
+    
+    /// Get unified rating based on total number
+    /// - Parameter totalNumber: TOtal number
+    /// - Returns: Double value
+    func convertedRating(basedOn totalNumber: Double) -> Double? {
+        
+        // check if value is valid or not
+        guard let val = value else { return nil }
+              
+        // check if rating is in percentage
+        if val.hasSuffix("%") {
+            // convert percentage to double
+            if let fValue = Double(val.replacingOccurrences(of: "%", with: "")) {
+                // convert rating to our desired rating
+                return (totalNumber * fValue)/100
+            } else {
+                return nil
+            }
+        } else {
+            // check for divider
+            let isDivivderPresent = val.contains("/") //--> 73/100
+            
+            if isDivivderPresent {
+                // split the string in order to get the two value and convert to double
+                let values = val.split(separator: "/").map { String($0) }.compactMap { Double($0) }
+                // check the count
+                guard values.count > 1,
+                      let score = values.first,
+                      let total = values.last else { return nil }
+                // convert rating to our desired rating
+                return (score * totalNumber)/total
+            } else {
+                return nil
+            }
+        }
+    }
+}
+
 enum VideoType: String, Codable {
     case movie = "movie"
     case series = "series"

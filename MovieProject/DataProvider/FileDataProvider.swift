@@ -7,10 +7,12 @@
 
 import Foundation
 
+/// Fetch data from serice
 protocol Fetchable {
     func fetchData(completion: @escaping(Data?, Error?)->Void)
 }
 
+/// Fetch data from file
 struct FileDataProvider: Fetchable {
     
     let fileName: String
@@ -29,7 +31,7 @@ struct FileDataProvider: Fetchable {
             completion(nil,error)
             return
         }
-        
+        // form the fileURL
         let fileURL = URL(fileURLWithPath: path)
 
         do {

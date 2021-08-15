@@ -126,7 +126,7 @@ class MovieSearchableListViewModel: BaseViewModel, MovieSearchableListViewModelP
             case .year:
                 return [video.year?.trim() ?? ""]
             case .directors:
-                return [video.director?.trim() ?? ""]
+                return video.director?.split(separator: ",").map { String($0).trim() } ?? [] //[video.director?.trim() ?? ""]
             case .actors:
                 return video.actors?.split(separator: ",").map { String($0).trim() } ?? []
             case .genre:
@@ -149,6 +149,10 @@ extension MovieSearchableListViewModel {
     
     func searchBarEndEditing() {
         self.searchMode = .off
+        self.reloadtableAfterSearchCancel()
+    }
+    
+    @objc func reloadtableAfterSearchCancel() {
         self.reloadTableCompletion?(true)
     }
     

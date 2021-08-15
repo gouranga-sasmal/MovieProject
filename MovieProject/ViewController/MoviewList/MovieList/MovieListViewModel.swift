@@ -24,6 +24,10 @@ class MovieListViewModel: MovieSearchableListViewModel {
         self.reloadTableCompletion?(true)
     }
     
+    func getTitleValue() -> String {
+        return selectedValue
+    }
+    
     override func showMovieList() -> Bool {
         // this list will always show movie list
         return true
@@ -49,5 +53,10 @@ class MovieListViewModel: MovieSearchableListViewModel {
         }
         // filter movie list
         return movieList.filter(withCriteria)
+    }
+    
+    override func reloadtableAfterSearchCancel() {
+        self.movies = filterdMovieList(using: category, from: self.allMovies, withSearchable: selectedValue)
+        self.reloadTableCompletion?(true)
     }
 }

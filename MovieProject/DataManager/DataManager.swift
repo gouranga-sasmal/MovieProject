@@ -18,7 +18,12 @@ struct DataManager: MovieListFetchable {
         // Now, if you want to fetch the data from server, then create class/struct and confirm to Fetchable protocol. And use that class(like NetworkDataProvider) here. Thats all you need to change.
         let fetcher: Fetchable = FileDataProvider(fileName: fileName)
         
-        fetcher.fetchData { (data, error) in
+        // initiate parser
+        let parser: Parseable = VideoParser()
+        
+        self.fetchVideos(from: fetcher, parseUsing: parser, completion: completion)
+        
+        /*fetcher.fetchData { (data, error) in
             // check for error
             guard let dt = data else {
                 completion(false, [])
@@ -33,6 +38,24 @@ struct DataManager: MovieListFetchable {
             }
             
             completion(true, videoList)
+        }*/
+    }
+    
+    func fetchVideos<T: Codable>(from fetcher: Fetchable, parseUsing parser: Parseable,completion: @escaping (Bool, [T]) -> Void) {
+        fetcher.fetchData { (data, error) in
+            // check for error
+            guard let dt = data else {
+                completion(false, [])
+                return
+            }
+            
+            // parse
+            guard let list: [T] = parser.parse(dt) else {
+                completion(false, [])
+                return
+            }
+            
+            completion(true, list)
         }
     }
 }

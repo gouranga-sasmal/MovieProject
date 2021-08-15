@@ -91,7 +91,7 @@ extension Rating {
                 // check the count
                 guard values.count > 1,
                       let score = values.first,
-                      let total = values.last else { return nil }
+                      let total = values.last, total > 0 else { return nil }
                 // convert rating to our desired rating
                 return (score * totalNumber)/total
             } else {
